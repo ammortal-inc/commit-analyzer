@@ -50,6 +50,11 @@ export async function analyzeCommits(pluginConfig, context) {
       }))
   );
 
+  // Keep track of the cumulative count
+  let incrementMajor=0
+  let incrementMinor=0
+  let incrementPatch=0
+
   for (const { rawMsg, ...commit } of filteredCommits) {
     logger.log(`Analyzing commit: %s`, rawMsg);
     let commitReleaseType;
@@ -74,12 +79,36 @@ export async function analyzeCommits(pluginConfig, context) {
 
     // Set releaseType if commit's release type is higher
     if (commitReleaseType && compareReleaseTypes(releaseType, commitReleaseType)) {
-      releaseType = commitReleaseType;
+      switch (commitReleaseType) {
+        case "major": {
+          incrementMajor++;
+          incrementMinor=0;
+          incrementPatch=0;
+        }; break;
+        case "minor": {
+          incrementMinor++;
+          incrementPatch=0;
+        }; break;
+        case "patch": {
+          incrementPatch++;
+        }; break;
+        default: {
+          releaseType = commitReleaseType;
+        }; break;
+      }
     }
 
-    // Break loop if releaseType is the highest
-    if (releaseType === RELEASE_TYPES[0]) {
-      break;
+    // // Break loop if releaseType is the highest
+    // if (releaseType === RELEASE_TYPES[0]) {
+    //   break;
+    // }
+  }
+
+  if (releaseType == null) {
+    releaseType = {
+      incrementMajor,
+      incrementMinor,
+      incrementPatch
     }
   }
 
