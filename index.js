@@ -23,7 +23,7 @@ const debug = debugFactory("semantic-release:commit-analyzer");
  * @param {Array<Object>} context.commits The commits to analyze.
  * @param {String} context.cwd The current working directory.
  *
- * @returns {Promise<String|null>} the type of release to create based on the list of commits or `null` if no release has to be done.
+ * @returns {Promise<Object|null>} the type of release to create based on the list of commits or `null` if no release has to be done.
  */
 export async function analyzeCommits(pluginConfig, context) {
   const { commits, logger } = context;
