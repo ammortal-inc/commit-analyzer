@@ -114,6 +114,7 @@ export async function analyzeCommits(pluginConfig, context) {
   }
 
   logger.log("Analysis of %s commits complete: %s release", commits.length, releaseType || "no");
+  logger.log("Release Info:", releaseInfo);
 
   return releaseInfo;
 }
